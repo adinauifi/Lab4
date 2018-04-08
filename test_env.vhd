@@ -19,7 +19,12 @@ end test_env;
 
 architecture Behavioral of test_env is
 
-component InstructionFetch is clk: in STD_LOGIC;
+
+
+
+
+component InstructionFetch is 
+	Port (clk: in STD_LOGIC;
 		jump_address: in STD_logic (15 downto 0);
 		branch_address: in std_logic (15 downto 0);
 		PCSrc: in STD_LOGIC;
@@ -27,7 +32,7 @@ component InstructionFetch is clk: in STD_LOGIC;
 		instruction: out STD_LOGIC (15 downto 0);
 		pc: in std_logic(15 downto 0);
 		WE: in STD_LOGIC;
-		reset: in STD_LOGIC;
+		reset: in STD_LOGIC);
 end component;
 
 component MPG is
@@ -47,16 +52,18 @@ component SSD is
 end component;
 
 
-signal jump_adress,branch_adress,jump_sgn,PCsrc,instruction,pc:STD_LOGIC_VECTOR(15 DOWNTO 0);
+signal instruction,pc:STD_LOGIC_VECTOR(15 DOWNTO 0);
 signal enable1: std_logic;
 signal enable2: std_logic; 
+signal afs: std_logic_vector(15 downto 0);
 
 begin
 
 	label_PC: MPG port map(clk, button(0), enable1);
---how to use mux? still need WE if i have clk? 
-	label_SSD: SSD port map (clk, instruction(7 downto 4), instruction(3 downto 0), pc(7 downto 4), pc(3 downto 0), an, cat);
-	label_reset: MPG port map (clk, sw(2), enable2);
-	label_IF: InstructionFetch(enable, jump_address, sw(1), sw(0), instruction, pc, enable1, enable2);
-
+	label_SSD: SSD port map (clk, afs(15 downto 12), afs(11 downto 8), afs(7 downto 4), afs(3 downto 0), an, cat);
+	label_reset: MPG port map (clk, button(1), enable2);
+	label_IF: InstructionFetch port map (clk, x"0000", x"0001", sw(1), sw(0), instruction, pc, enable1, enable2);
+	
+	
+	afs <= instruction when sw(2) = '0' else pc;
 end architecture;
