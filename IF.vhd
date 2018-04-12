@@ -5,18 +5,18 @@ use IEEE.STD_LOGIC_UNSIGNED.ALL;
 
 entity InstructionFetch is port (
 		clk: in STD_LOGIC;
-		jump_address: in STD_logic (15 downto 0);
-		branch_address: in std_logic (15 downto 0);
+		jump_address: in STD_logic_vector (15 downto 0);
+		branch_address: in std_logic_vector (15 downto 0);
 		PCSrc: in STD_LOGIC;
 		jump: in STD_LOGIC;
-		instruction: out STD_LOGIC (15 downto 0);
-		pc: in std_logic(15 downto 0);
+		instruction: out STD_LOGIC_vector (15 downto 0);
+		pc: inout std_logic_vector(15 downto 0);
 		WE: in STD_LOGIC;
 		reset: in STD_LOGIC);
 end entity;
 
 architecture Behavioral of InstructionFetch is 
-signal PCaux : std_logic(15 downto 0);
+signal PCaux : std_logic_vector(15 downto 0);
 type ROM is array (0 to 255) of std_logic_vector(15 downto 0);
 signal ins: ROM: (0 => B"000_001_010_011_0_000", --add $1 $2 $3
          1  => B"000_001_010_011_0_001", --sub $1 $2 $3
@@ -34,9 +34,9 @@ signal ins: ROM: (0 => B"000_001_010_011_0_000", --add $1 $2 $3
         13  => B"110_001_010_0000011", --xori $1 $2 3
         14  => B"111_0000000000100", --j 4
 		others => x"0000");
-signal muxOut1 : std_logic(15 downto 0);
-signal muxOut2 : std_logic(15 downto 0);
-signal adderOut: std_logic(15 downto 0);
+signal muxOut1 : std_logic_vector(15 downto 0);
+signal muxOut2 : std_logic_vector(15 downto 0);
+signal adderOut: std_logic_vector(15 downto 0);
 begin
 
 --Program Counter
